@@ -65,6 +65,6 @@ curl -X GET "http://localhost:8080/words?sortOrder=asc"
 curl -X GET "http://localhost:8080/words?sortOrder=desc"
 
 for adding a word or several words:
-curl -X POST -H "Content-Type: application/json" -d '{"role": "ALL", ["Ananas", "Bananas", "Coolest_word"]}' http://localhost:8080/words
+curl -X POST -H "Content-Type: application/json" -d '["Ananas", "Bananas", "Coolest_word"]' http://localhost:8080/words
 
 ```
