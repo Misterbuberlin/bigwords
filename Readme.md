@@ -43,7 +43,6 @@ REST api. If we manage to fulfill these, we have calculated that our customer ba
    would prefer that the database is initialized with the quarkus flyway module.
 7. Please make sure your code is working correctly by providing tests for the new code.
 
-
 ## Kubernetes
 
 Congratulations!!! Big words agreed to our contract and our customer base is rising. We project that by the end of the
@@ -52,7 +51,6 @@ quarter, our customers will tripple.
 In order to satisfy the increased demand for our service, we need to scale the service up. Currently, it is running in a
 single pod. Your task is to adapt the kubernetes files so that instead of using a single pod, we can scale the service
 to 3 pods using a singular deployment configuration file.
-
 
 ## Additional information for testing:
 

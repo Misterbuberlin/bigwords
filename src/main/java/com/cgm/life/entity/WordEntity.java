@@ -9,14 +9,6 @@ public class WordEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //
     private String word;
-
-    public boolean isPremium() {
-        return isPremium;
-    }
-
-    public void setPremium(boolean premium) {
-        isPremium = premium;
-    }
     @Column(name = "is_premium")
     private boolean isPremium;
 
@@ -27,6 +19,14 @@ public class WordEntity {
     public WordEntity(String word, boolean isPremium) {
         this.word = word;
         this.isPremium = isPremium;
+    }
+
+    public boolean isPremium() {
+        return isPremium;
+    }
+
+    public void setPremium(boolean premium) {
+        isPremium = premium;
     }
 
     public Long getId() {

@@ -1,28 +1,26 @@
 package com.cgm.life.resource;
 
-import com.cgm.life.service.PremiumWordService;
-import com.cgm.life.util.Roles;
 import com.cgm.life.entity.WordEntity;
 import com.cgm.life.service.WordService;
+import com.cgm.life.util.Roles;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.security.identity.SecurityIdentity;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
-import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -30,11 +28,13 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/words")
 public class WordsResource {
-    @Inject
-    private WordService wordService;
+
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WordsResource.class);
+
 
     @Inject
-    private SecurityIdentity securityIdentity;
+    private WordService wordService;
 
 
     @GET
@@ -55,7 +55,7 @@ public class WordsResource {
             Collections.sort(allWords);
         }
 
-         return Response.ok(allWords).build();
+        return Response.ok(allWords).build();
     }
 
 
@@ -74,7 +74,7 @@ public class WordsResource {
     @POST
     @Path("/premium")
     @Transactional
-    @RolesAllowed({ Roles.BIG_WORDS})
+    @RolesAllowed({Roles.BIG_WORDS})
     @Operation(summary = "Add words", description = "Add a list of words")
     @RequestBody(description = "List of words to add", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON))
     @APIResponse(responseCode = "200", description = "Successful operation")
@@ -87,7 +87,7 @@ public class WordsResource {
 
     @GET
     @Path("/premium")
-    @RolesAllowed({ Roles.BIG_WORDS})
+    @RolesAllowed({Roles.BIG_WORDS})
     @Operation(summary = "Get Premium Data", description = "Retrieve premium data for users with 'BIG_WORDS' role.")
     @APIResponse(responseCode = "200", description = "Success")
     public Response getPremiumData() {
