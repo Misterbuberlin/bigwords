@@ -1,4 +1,4 @@
-package com.cgm.life.integration;
+package com.cgm.life.resource;
 
 import com.cgm.life.entity.WordEntity;
 import com.cgm.life.service.WordService;

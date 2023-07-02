@@ -1,4 +1,4 @@
-package com.cgm.life.resource;
+package com.cgm.life.integration;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
