@@ -1,7 +1,6 @@
 package com.cgm.life.resource;
 
 import com.cgm.life.entity.WordEntity;
-import com.cgm.life.service.PremiumWordService;
 import com.cgm.life.service.WordService;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.test.common.QuarkusTestResource;
@@ -12,7 +11,6 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.stubbing.OngoingStubbing;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -27,13 +25,12 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
 @QuarkusTestResource(H2DatabaseTestResource.class) // Use H2 test resource
-public class WordsPremiumResourceTest {
+public class PremiumWordsResourceTest {
 
     @Inject
     EntityManager entityManager;
