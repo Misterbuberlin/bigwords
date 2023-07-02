@@ -28,14 +28,10 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/words")
 public class WordsResource {
-
-
     private static final Logger LOGGER = LoggerFactory.getLogger(WordsResource.class);
-
 
     @Inject
     private WordService wordService;
-
 
     @POST
     @Transactional
@@ -49,6 +45,7 @@ public class WordsResource {
         wordService.persistWords(wordEntities);
         return Response.status(Response.Status.CREATED).entity(wordEntities).build();
     }
+
     @GET
     @Path("/")
     @RolesAllowed({Roles.END_USER, Roles.BIG_WORDS})
@@ -68,7 +65,6 @@ public class WordsResource {
             // default sort order is ascending.
             Collections.sort(allWords);
         }
-
         return Response.ok(allWords).build();
     }
 
@@ -101,7 +97,6 @@ public class WordsResource {
         List<WordEntity> list = premiumWords.list();
         List<String> premiumList = list.stream().map(w -> w.getWord()).collect(Collectors.toList());
         return Response.ok(premiumList).build();
-
     }
 }
 

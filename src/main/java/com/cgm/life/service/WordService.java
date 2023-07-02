@@ -12,7 +12,6 @@ import java.util.List;
 
 @ApplicationScoped
 public class WordService {
-
     @Inject
     private WordRepository wordRepository;
 
