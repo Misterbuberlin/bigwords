@@ -37,18 +37,32 @@ public class WordsResource {
     private WordService wordService;
 
 
+    @POST
+    @Transactional
+    @RolesAllowed({Roles.END_USER, Roles.BIG_WORDS})
+    @Operation(summary = "Add words", description = "Add a list of words")
+    @RequestBody(description = "List of words to add", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON))
+    @APIResponse(responseCode = "200", description = "Successful operation")
+    public Response addWords(List<String> words) {
+        LOGGER.info("Adding words: {}", words);
+        List<WordEntity> wordEntities = words.stream().map(w -> new WordEntity(w.toLowerCase(), Boolean.FALSE)).collect(Collectors.toList());
+        wordService.persistWords(wordEntities);
+        return Response.status(Response.Status.CREATED).entity(wordEntities).build();
+    }
     @GET
     @Path("/")
     @RolesAllowed({Roles.END_USER, Roles.BIG_WORDS})
     @Operation(summary = "Get words", description = "Retrieve a list of words")
     @APIResponse(responseCode = "200", description = "Successful operation")
     public Response getWords(@QueryParam("sortOrder") String sortOrder) {
-
+        LOGGER.info("Getting all (non-premium) words");
         List<WordEntity> all = wordService.getWords();
         List<String> allWords = all.stream().map(w -> w.getWord()).collect(Collectors.toList());
         if (sortOrder != null && sortOrder.equals("desc")) {
             Collections.sort(allWords, Comparator.reverseOrder());
+            LOGGER.info("Getting all (non-premium) words in descending order");
         } else if (sortOrder != null && sortOrder.equals("asc")) {
+            LOGGER.info("Getting all (non-premium) words in ascending order");
             Collections.sort(allWords);
         } else {
             // default sort order is ascending.
@@ -59,17 +73,7 @@ public class WordsResource {
     }
 
 
-    @POST
-    @Transactional
-    @RolesAllowed({Roles.END_USER, Roles.BIG_WORDS})
-    @Operation(summary = "Add words", description = "Add a list of words")
-    @RequestBody(description = "List of words to add", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON))
-    @APIResponse(responseCode = "200", description = "Successful operation")
-    public Response addWords(List<String> words) {
-        List<WordEntity> wordEntities = words.stream().map(w -> new WordEntity(w.toLowerCase(), Boolean.FALSE)).collect(Collectors.toList());
-        wordService.persistWords(wordEntities);
-        return Response.status(Response.Status.CREATED).entity(wordEntities).build();
-    }
+
 
     @POST
     @Path("/premium")
@@ -79,6 +83,7 @@ public class WordsResource {
     @RequestBody(description = "List of words to add", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON))
     @APIResponse(responseCode = "200", description = "Successful operation")
     public Response addPremiumWords(List<String> words) {
+        LOGGER.info("Adding premium words: {}", words);
         List<WordEntity> wordEntities = words.stream().map(w -> new WordEntity(w.toLowerCase(), Boolean.TRUE)).collect(Collectors.toList());
         wordService.persistWords(wordEntities);
         return Response.status(Response.Status.CREATED).entity(wordEntities).build();
@@ -91,6 +96,7 @@ public class WordsResource {
     @Operation(summary = "Get Premium Data", description = "Retrieve premium data for users with 'BIG_WORDS' role.")
     @APIResponse(responseCode = "200", description = "Success")
     public Response getPremiumData() {
+        LOGGER.info("Getting all premium words");
         PanacheQuery<WordEntity> premiumWords = wordService.getPremiumWords();
         List<WordEntity> list = premiumWords.list();
         List<String> premiumList = list.stream().map(w -> w.getWord()).collect(Collectors.toList());
