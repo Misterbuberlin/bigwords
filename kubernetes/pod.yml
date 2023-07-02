@@ -1,10 +1,19 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: wordList
+  name: wordlist-deployment
 spec:
-  containers:
-  - name: wordlist-container
-    image: com.cgm.life/wordlist:1.0.0
-    ports:
-    - containerPort: 80
+  replicas: 3  # Set the desired number of replicas to 3
+  selector:
+    matchLabels:
+      app: wordlist
+  template:
+    metadata:
+      labels:
+        app: wordlist
+    spec:
+      containers:
+        - name: wordlist-container
+          image: com.cgm.life/wordlist:1.0.0
+          ports:
+            - containerPort: 80
