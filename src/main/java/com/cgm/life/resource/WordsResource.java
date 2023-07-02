@@ -29,9 +29,6 @@ import java.util.stream.Collectors;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/words")
-@SecurityRequirements(
-        @SecurityRequirement(name = "bearerAuth")
-)
 public class WordsResource {
     @Inject
     private WordService wordService;
@@ -63,7 +60,6 @@ public class WordsResource {
 
 
     @POST
-    @Path("/")
     @Transactional
     @RolesAllowed({Roles.END_USER, Roles.BIG_WORDS})
     @Operation(summary = "Add words", description = "Add a list of words")
@@ -72,7 +68,7 @@ public class WordsResource {
     public Response addWords(List<String> words) {
         List<WordEntity> wordEntities = words.stream().map(w -> new WordEntity(w.toLowerCase(), Boolean.FALSE)).collect(Collectors.toList());
         wordService.persistWords(wordEntities);
-        return Response.status(Response.Status.CREATED).build();
+        return Response.status(Response.Status.CREATED).entity(wordEntities).build();
     }
 
     @POST
@@ -85,7 +81,7 @@ public class WordsResource {
     public Response addPremiumWords(List<String> words) {
         List<WordEntity> wordEntities = words.stream().map(w -> new WordEntity(w.toLowerCase(), Boolean.TRUE)).collect(Collectors.toList());
         wordService.persistWords(wordEntities);
-        return Response.status(Response.Status.CREATED).build();
+        return Response.status(Response.Status.CREATED).entity(wordEntities).build();
     }
 
 
