@@ -14,7 +14,7 @@ public class CustomExceptionMapper implements ExceptionMapper<Exception> {
 
         // Example response: HTTP 500 Internal Server Error
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity("An error occurred in the home assignment :-): " + exception.getMessage())
+                .entity("An error occurred in BigWords app :-): " + exception)
                 .build();
     }
 }
