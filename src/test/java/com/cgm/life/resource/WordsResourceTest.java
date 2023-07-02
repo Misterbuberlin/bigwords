@@ -6,6 +6,7 @@ import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
 
 @QuarkusTest
@@ -64,5 +66,23 @@ public class WordsResourceTest {
                 .when().get("/words")
                 .then()
                 .statusCode(403); // Unauthorized, as no authentication provided
+    }
+
+    @Test
+    @TestSecurity(user = "username", roles = {"END_USER", "BIG_WORDS"})
+    public void testAddWords() {
+        List<String> words = Arrays.asList("word1", "word2", "word3");
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(words)
+                .when()
+                .post("/words")
+                .then()
+                .statusCode(201)
+                .body("size()", equalTo(words.size()))
+                .body("findAll { it.word == 'word1' }", hasSize(1))
+                .body("findAll { it.word == 'word2' }", hasSize(1))
+                .body("findAll { it.word == 'word3' }", hasSize(1));
     }
 }
