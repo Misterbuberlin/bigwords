@@ -56,7 +56,8 @@ to 3 pods using a singular deployment configuration file.
 
 ## Additional information for testing:
 
-here are the curl queries for the current api:
+Integration tests and tests of the quarkus resources are available.
+And these curl queries can also be used:
 
 ``` 
 for getting all words:
