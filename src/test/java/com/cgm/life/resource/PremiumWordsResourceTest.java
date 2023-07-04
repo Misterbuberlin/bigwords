@@ -3,17 +3,12 @@ package com.cgm.life.resource;
 import com.cgm.life.entity.WordEntity;
 import com.cgm.life.service.WordService;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import io.quarkus.test.common.QuarkusTestResource;
-import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.MediaType;
 import java.util.Arrays;
@@ -27,18 +22,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
-@QuarkusTestResource(H2DatabaseTestResource.class) // Use H2 test resource
 public class PremiumWordsResourceTest {
-
-    @Inject
-    EntityManager entityManager;
-
-    @AfterEach
-    @Transactional
-    public void cleanDatabase() {
-        entityManager.createNativeQuery("DELETE FROM cgm.words").executeUpdate();
-
-    }
 
     @Test
     @Transactional

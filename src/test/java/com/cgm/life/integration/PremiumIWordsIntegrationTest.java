@@ -1,5 +1,7 @@
 package com.cgm.life.integration;
 
+import com.cgm.life.embedded.postgres.resource.PostgresDatabaseTestResource;
+import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
@@ -17,6 +19,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 @QuarkusTest
+@QuarkusTestResource(PostgresDatabaseTestResource.class)
 public class PremiumIWordsIntegrationTest {
 
     @Inject
