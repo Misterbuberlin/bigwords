@@ -19,12 +19,12 @@ public class PostgresDatabaseTestResource implements QuarkusTestResourceLifecycl
     public Map<String, String> start() {
         final String userName = System.getProperty("user.name");
         if ("root".equals(userName)) {
-            throw new IllegalStateException("Cannot provision Ephemeral Postgres when running as user: " + userName);
+            throw new IllegalStateException("Cannot run embedded Postgres when running as user: " + userName);
         }
         try {
             postgres = EmbeddedPostgres.builder().start();
         } catch (IOException e) {
-            throw new RuntimeException("Could not start Ephemeral Postgres", e);
+            throw new RuntimeException("Could not start embedded Postgres", e);
         }
         Map<String, String> props = new HashMap<>();
         props.put("quarkus.datasource.jdbc.url", postgres.getJdbcUrl("postgres", "postgres"));
@@ -41,7 +41,7 @@ public class PostgresDatabaseTestResource implements QuarkusTestResourceLifecycl
             try {
                 postgres.close();
             } catch (IOException e) {
-                LOGGER.warn("Could not stop Ephemeral Postgres", e);
+                LOGGER.warn("Could not stop embedded Postgres", e);
             }
             postgres = null;
         }
