@@ -5,6 +5,7 @@ import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -98,5 +99,23 @@ public class PremiumIWordsIntegrationTest {
                 .body("[0]", equalTo("word1"))
                 .body("[1]", equalTo("word2"))
                 .body("[2]", equalTo("word3"));
+    }
+
+    @Test
+    @TestSecurity(user = "username", roles = {"END_USER", "BIG_WORDS"})
+    public void testAddWords2() {
+        List<String> words = Arrays.asList("word1", "word2", "word3");
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(words)
+                .when()
+                .post("/words")
+                .then()
+                .statusCode(201)
+                .body("size()", CoreMatchers.equalTo(words.size()))
+                .body("findAll { it.word == 'word1' }", hasSize(1))
+                .body("findAll { it.word == 'word2' }", hasSize(1))
+                .body("findAll { it.word == 'word3' }", hasSize(1));
     }
 }

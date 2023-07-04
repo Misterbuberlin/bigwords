@@ -4,7 +4,6 @@ import com.cgm.life.entity.WordEntity;
 import com.cgm.life.service.WordService;
 import com.cgm.life.util.Roles;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import io.quarkus.security.identity.SecurityIdentity;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
@@ -67,8 +66,6 @@ public class WordsResource {
         }
         return Response.ok(allWords).build();
     }
-
-
 
 
     @POST

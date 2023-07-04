@@ -44,7 +44,7 @@ public class PremiumWordsResourceTest {
 
     @Test
     @TestSecurity(user = "username", roles = {"BIG_WORDS"})
-    public void testGetPremiumData() {
+    public void testGetPremiumWords() {
         WordService premiumWordServiceMock = mock(WordService.class);
         PanacheQuery<WordEntity> mockQuery = mock(PanacheQuery.class);
         when(premiumWordServiceMock.getPremiumWords()).thenReturn(mockQuery);
