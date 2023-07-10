@@ -6,6 +6,8 @@ import com.cgm.life.util.Roles;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.slf4j.Logger;
@@ -29,6 +31,9 @@ import java.util.stream.Collectors;
 public class WordsResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(WordsResource.class);
 
+    private enum SortOrder {
+        asc, desc;
+    }
     @Inject
     private WordService wordService;
 
@@ -50,14 +55,16 @@ public class WordsResource {
     @RolesAllowed({Roles.END_USER, Roles.BIG_WORDS})
     @Operation(summary = "Get words", description = "Retrieve a list of words")
     @APIResponse(responseCode = "200", description = "Successful operation")
-    public Response getWords(@QueryParam("sortOrder") String sortOrder) {
+    public Response getWords(@QueryParam("sortOrder") @Parameter(
+            description = "Sort order",
+            schema = @Schema(implementation = SortOrder.class)) String sortOrder) {
         LOGGER.info("Getting all (non-premium) words");
         List<WordEntity> all = wordService.getWords();
         List<String> allWords = all.stream().map(w -> w.getWord()).collect(Collectors.toList());
-        if (sortOrder != null && sortOrder.equals("desc")) {
+        if (sortOrder != null && sortOrder.equals(SortOrder.desc.name())) {
             Collections.sort(allWords, Comparator.reverseOrder());
             LOGGER.info("Getting all (non-premium) words in descending order");
-        } else if (sortOrder != null && sortOrder.equals("asc")) {
+        } else if (sortOrder != null && sortOrder.equals(SortOrder.asc.name())) {
             LOGGER.info("Getting all (non-premium) words in ascending order");
             Collections.sort(allWords);
         } else {
@@ -72,7 +79,7 @@ public class WordsResource {
     @Path("/premium")
     @Transactional
     @RolesAllowed({Roles.BIG_WORDS})
-    @Operation(summary = "Add words", description = "Add a list of words")
+    @Operation(summary = "Add premium words", description = "Add a list of premium words")
     @RequestBody(description = "List of words to add", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON))
     @APIResponse(responseCode = "200", description = "Successful operation")
     public Response addPremiumWords(List<String> words) {
@@ -86,7 +93,7 @@ public class WordsResource {
     @GET
     @Path("/premium")
     @RolesAllowed({Roles.BIG_WORDS})
-    @Operation(summary = "Get Premium Data", description = "Retrieve premium data for users with 'BIG_WORDS' role.")
+    @Operation(summary = "Get Premium Words", description = "Retrieve premium data for users with 'BIG_WORDS' role.")
     @APIResponse(responseCode = "200", description = "Success")
     public Response getPremiumData() {
         LOGGER.info("Getting all premium words");
