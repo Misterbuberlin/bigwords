@@ -1,10 +1,14 @@
--- db/migration/V1__create_table.sql
-
-CREATE SCHEMA IF NOT EXISTS cgm;
-
-CREATE TABLE IF NOT EXISTS cgm.words
+--CREATE SCHEMA cgm;
+CREATE TABLE cgm.words
 (
-    id         INT PRIMARY KEY,
-    word       VARCHAR(255) NOT NULL,
-    is_premium boolean      NOT NULL
+    id         BIGSERIAL PRIMARY KEY,
+    word       VARCHAR(255) UNIQUE NOT NULL, --make word UNIQUE
+    is_premium BOOLEAN DEFAULT FALSE-- premium or not
 );
+
+INSERT INTO cgm.words (word, is_premium)
+VALUES ('this', true);
+INSERT INTO cgm.words (word, is_premium)
+VALUES ('is', true);
+INSERT INTO cgm.words (word, is_premium)
+VALUES ('premium', true);
