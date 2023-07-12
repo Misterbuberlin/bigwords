@@ -7,12 +7,14 @@ import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -99,6 +101,72 @@ public class PremiumIWordsIntegrationTest {
                 .body("[0]", equalTo("word1"))
                 .body("[1]", equalTo("word2"))
                 .body("[2]", equalTo("word3"));
+    }
+
+    @Test
+    @TestSecurity(user = "username", roles = {"BIG_WORDS"})
+    @Transactional
+    public void testQueryParamterDesc() {
+        List<String> words = Arrays.asList("ananas", "banana", "kurkuma");
+
+        String string = given()
+
+                .contentType(ContentType.JSON)
+                .body(words)
+                .when()
+                .post("/words")
+                .then()
+                .extract()
+                .body().asString();
+
+        List<String> reversedWordList = given()
+                .queryParam("sortOrder", "desc")
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/words")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .jsonPath()
+                .getList(".", String.class);
+
+        // Reverse the responseBody list
+        Collections.reverse(words);
+        Assertions.assertEquals(words, reversedWordList);
+
+    }
+
+    @Test
+    public void testQueryParamterAsc() {
+        List<String> words = Arrays.asList("kurkuma", "banana", "ananas");
+
+        String string = given()
+
+                .contentType(ContentType.JSON)
+                .body(words)
+                .when()
+                .post("/words")
+                .then()
+                .extract()
+                .body().asString();
+
+        List<String> wordListAscSorted = given()
+                .queryParam("sortOrder", "asc")
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/words")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .jsonPath()
+                .getList(".", String.class);
+
+        // Reverse the responseBody list
+        Collections.reverse(words);
+        Assertions.assertEquals(words, wordListAscSorted);
+
     }
 
     @Test
