@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: wordlist-deployment
 spec:
-  replicas: 3  # Set the desired number of replicas to 3
+  replicas: 3  # Set the number of desired replicas
   selector:
     matchLabels:
       app: wordlist
@@ -14,6 +14,7 @@ spec:
     spec:
       containers:
         - name: wordlist-container
-          image: com.cgm.life/wordlist:1.0.0
+          image: word-list:3.7.12
           ports:
-            - containerPort: 80
+            - containerPort: 8080
+
