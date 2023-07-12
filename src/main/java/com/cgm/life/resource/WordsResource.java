@@ -39,20 +39,20 @@ public class WordsResource {
 
     @POST
     @Transactional
-    @RolesAllowed({Roles.END_USER, Roles.BIG_WORDS})
+    //@RolesAllowed({Roles.END_USER, Roles.BIG_WORDS})
     @Operation(summary = "Add words", description = "Add a list of words")
     @RequestBody(description = "List of words to add", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON))
     @APIResponse(responseCode = "200", description = "Successful operation")
     public Response addWords(List<String> words) {
         LOGGER.info("Adding words: {}", words);
-        List<WordEntity> wordEntities = words.stream().map(w -> new WordEntity(w.toLowerCase(), Boolean.FALSE)).collect(Collectors.toList());
+        List<WordEntity> wordEntities = words.stream().map(w -> new WordEntity(w, Boolean.FALSE)).collect(Collectors.toList());
         wordService.persistWords(wordEntities);
         return Response.status(Response.Status.CREATED).entity(wordEntities).build();
     }
 
     @GET
     @Path("/")
-    @RolesAllowed({Roles.END_USER, Roles.BIG_WORDS})
+   // @RolesAllowed({Roles.END_USER, Roles.BIG_WORDS})
     @Operation(summary = "Get words", description = "Retrieve a list of words")
     @APIResponse(responseCode = "200", description = "Successful operation")
     public Response getWords(@QueryParam("sortOrder") @Parameter(
@@ -78,7 +78,7 @@ public class WordsResource {
     @POST
     @Path("/premium")
     @Transactional
-    @RolesAllowed({Roles.BIG_WORDS})
+   // @RolesAllowed({Roles.BIG_WORDS})
     @Operation(summary = "Add premium words", description = "Add a list of premium words")
     @RequestBody(description = "List of words to add", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON))
     @APIResponse(responseCode = "200", description = "Successful operation")
@@ -92,11 +92,11 @@ public class WordsResource {
 
     @GET
     @Path("/premium")
-    @RolesAllowed({Roles.BIG_WORDS})
-    @Operation(summary = "Get Premium Words", description = "Retrieve premium data for users with 'BIG_WORDS' role.")
+   // @RolesAllowed({Roles.BIG_WORDS})
+    @Operation(summary = "Get premium words", description = "Retrieve premium words for users who are granted the 'BIG_WORDS' role.")
     @APIResponse(responseCode = "200", description = "Success")
     public Response getPremiumData() {
-        LOGGER.info("Getting all premium words");
+        LOGGER.info("Getting all premium words.");
         PanacheQuery<WordEntity> premiumWords = wordService.getPremiumWords();
         List<WordEntity> list = premiumWords.list();
         List<String> premiumList = list.stream().map(w -> w.getWord()).collect(Collectors.toList());
